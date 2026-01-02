@@ -16,6 +16,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
 
+    <!-- Main CSS -->
     <style>
         /* --- 1. CORE VARIABLES & RESET --- */
         :root {
@@ -50,7 +51,7 @@
             height: 100%;
             width: 100%;
         }
-        
+
         body {
             cursor: none; 
             opacity: 0; 
@@ -65,7 +66,7 @@
 
         #canvas1 {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-            background: #000;
+            background: #800703; /* CHANGED BACKGROUND COLOR HERE */
         }
 
         /* --- 2. CUSTOM CURSOR --- */
@@ -87,7 +88,8 @@
         /* --- 3. PRELOADER --- */
         .preloader {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 10000; display: flex;
+            background: #800703; /* Updated preloader to match new bg */
+            z-index: 10000; display: flex;
             justify-content: center; align-items: center; flex-direction: column; visibility: visible;
         }
         .loader-text {
@@ -114,11 +116,10 @@
             width: auto !important;
             height: 100% !important;
             object-fit: contain !important;
-            /* Makes the black background of the logo transparent to blend with header */
             mix-blend-mode: screen; 
             filter: brightness(1.1); 
         }
-        
+
         .nav-link { 
             margin-left: 40px; font-size: 0.8rem; text-transform: uppercase; 
             letter-spacing: 2px; position: relative; color: #fff; font-weight: 600;
@@ -176,6 +177,7 @@
         }
 
         @keyframes shine { to { background-position: 200% center; } }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 40% {transform: translateY(-10px);} 60% {transform: translateY(-5px);} }
 
         /* --- 6. HOME & NEW HEADING --- */
         .hero-screen {
@@ -187,7 +189,7 @@
             background: transparent; z-index: 0;
         }
         .hero-content { padding-left: 5vw; z-index: 2; position: relative; }
-        
+
         /* NEW TAGLINE CSS */
         .hero-tagline {
             display: flex; align-items: center; gap: 15px; margin-bottom: 25px;
@@ -207,10 +209,14 @@
             color: #ddd; opacity: 0; transform: translateY(20px); font-weight: 200;
         }
 
+        .scroll-indicator {
+            position:absolute; bottom:30px; left:5vw; color:#aaa; font-size:0.8rem; letter-spacing:2px; animation: bounce 2s infinite;
+        }
+
         /* Sections */
         .teaser-section { padding: 100px 0; border-bottom: 1px solid var(--glass-border); }
         .teaser-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
-        
+
         .img-reveal-wrap { height: 400px; width: 100%; overflow: hidden; position: relative; }
         .teaser-img, .about-img-wrap img, .p-img, .service-bg img {
             width: 100%; height: 100%; object-fit: cover; transition: filter 0.5s ease;
@@ -226,7 +232,7 @@
             top: 0; left: 0; right: 0; bottom: 0; border-color: var(--gold); border-width: 2px;
             box-shadow: inset 0 0 20px rgba(212, 175, 55, 0.1), 0 0 15px rgba(212, 175, 55, 0.3);
         }
-        
+
         .teaser-section:hover .teaser-img { filter: grayscale(0%); }
         .teaser-title { font-size: 2.5rem; margin-bottom: 20px; }
         .teaser-desc { color: var(--text-muted); margin-bottom: 30px; line-height: 1.7; font-size: 1.1rem; }
@@ -276,13 +282,14 @@
             border: 1px solid var(--glass-border); display: block; transition: 0.3s; 
             background: var(--glass-bg);
         }
-        .service-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; filter: brightness(0.3) grayscale(100%); transition: 0.6s; transform: scale(1.2); }
+        /* Increased brightness from 0.3 to 0.6 */
+        .service-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; filter: brightness(0.6) grayscale(100%); transition: 0.6s; transform: scale(1.2); }
         .service-content { 
             position: relative; z-index: 7; height: 100%; padding: 40px; 
             display: flex; flex-direction: column; justify-content: flex-end; 
             background: linear-gradient(to top, rgba(20,0,0,0.8), transparent); 
         }
-        .service-card:hover .service-bg { filter: brightness(0.6) grayscale(0%); }
+        .service-card:hover .service-bg { filter: brightness(0.8) grayscale(0%); }
         .service-card:hover { border-color: transparent; }
         .service-title { font-size: 2rem; margin-bottom: 10px; transform: translateY(10px); transition: 0.4s; } 
         .service-desc { color: #ccc; font-size: 1rem; opacity: 0.8; transform: translateY(10px); transition: 0.4s; line-height: 1.6; }
@@ -324,7 +331,7 @@
             background: linear-gradient(45deg, rgba(212,175,55,0.1), rgba(20,0,0,0.5));
         }
         .estimated-price { font-size: 3rem; color: var(--gold); font-family: 'Playfair Display'; margin: 20px 0; }
-        
+
         /* FURNITURE */
         .furniture-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; margin-bottom: 100px; }
         .furn-visual {
@@ -441,6 +448,40 @@
             .logo { height: 45px; }
         }
     </style>
+
+    <!-- Project View Specific Styles -->
+    <style>
+        /* Styles for the "New Page" (Project View) */
+        .pv-header { margin-bottom: 40px; }
+        .pv-hero {
+            width: 100%; height: 60vh; position: relative; overflow: hidden; margin-bottom: 50px;
+            border-bottom: 2px solid var(--gold);
+        }
+        .pv-hero img { width: 100%; height: 100%; object-fit: cover; animation: zoomIn 20s infinite alternate; }
+        @keyframes zoomIn { from { transform: scale(1); } to { transform: scale(1.1); } }
+        
+        .pv-meta-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+            border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border);
+            padding: 30px 0; margin-bottom: 40px;
+        }
+        .pv-meta-item h5 { font-family: 'Manrope'; font-size: 0.75rem; color: var(--gold); letter-spacing: 2px; margin-bottom: 5px; }
+        .pv-meta-item p { color: #ddd; font-size: 1rem; }
+        
+        .pv-desc-container { max-width: 800px; margin: 0 auto 80px; text-align: left; }
+        .pv-desc-text { font-size: 1.1rem; line-height: 1.8; color: #ccc; margin-bottom: 20px; }
+        
+        .pv-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 80px; }
+        .pv-gallery-item { height: 400px; overflow: hidden; position: relative; border: 1px solid var(--glass-border); }
+        .pv-gallery-item img { transition: 0.5s; filter: grayscale(50%); width: 100%; height: 100%; object-fit: cover; }
+        .pv-gallery-item:hover img { transform: scale(1.05); filter: grayscale(0%); }
+
+        @media(max-width: 768px) {
+            .pv-hero { height: 40vh; }
+            .pv-meta-grid { grid-template-columns: 1fr 1fr; gap: 30px; }
+            .pv-gallery { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body>
 
@@ -488,11 +529,9 @@
 
 <!-- HEADER -->
 <header>
-    <!-- IMAGE LOGO START -->
     <a href="#" class="logo hover-target" onclick="switchTab('home')">
-        <img src="file:///C:/Users/BC/Downloads/20260101_160109%20(1).png" alt="Rivaan Interiors Logo">
+        <img src="images/logo.png" alt="Rivaan Interiors Logo">
     </a>
-    <!-- IMAGE LOGO END -->
     
     <div style="display:flex; align-items:center;">
         <nav>
@@ -526,20 +565,16 @@
         <div class="hero-screen">
             <div class="hero-bg"></div>
             <div class="container hero-content">
-                
-                    <h1 class="hero-title">
+                <h1 class="hero-title">
                     <span>Calm Luxury.</span>
                     <span>Future Living.</span>
                 </h1>
-
-                <h2 class="teaser-title">CALM LUXERY..</h2>
-
+                <h2 class="teaser-title">CALM LUXURY..</h2>
                 <p class="hero-sub">Defining The Aesthetics Of Modern Mumbai. We Craft Bespoke Residential and Commercial Spaces That Blend High-End luxury with Functional Timelessness.</p>
                 <button class="btn hover-target" onclick="switchTab('projects')">Explore Work</button>
-                <div style="position:absolute; bottom:30px; left:5vw; color:#aaa; font-size:0.8rem; letter-spacing:2px; animation: bounce 2s infinite;"> &darr;</div>
+                <div class="scroll-indicator"> &darr;</div>
             </div>
         </div>
-
         <div class="container teaser-section">
             <div class="teaser-grid">
                 <div class="teaser-content">
@@ -549,39 +584,36 @@
                     <button class="btn hover-target" onclick="switchTab('about')">Read Philosophy</button>
                 </div>
                 <div class="img-reveal-wrap hover-target">
-                    <img src="file:///C:/Users/BC/Downloads/IMG_20251230_141746.jpg" class="teaser-img" alt="Studio Teaser">
+                    <img src="images/living room 4.jpeg" class="teaser-img" alt="Studio Teaser">
                 </div>
             </div>
         </div>
-
         <div class="container teaser-section">
             <div class="teaser-grid">
                 <div class="img-reveal-wrap hover-target">
-                    <img src="file:///C:/Users/BC/Downloads/IMG_20251230_145619.jpg" class="teaser-img" alt="Services Teaser">
+                    <img src="images/kitchen 2.jpeg" class="teaser-img" alt="Services Teaser">
                 </div>
                 <div class="teaser-content">
                     <span class="section-subtitle">02 / EXPERTISE</span>
-                    <h2 class="teaser-title">Bespoke Execution.</h2>
-                    <p class="teaser-desc">From Luxury Residences in Bandra to Corporate HQs in powai. Our turnkey solutions cover everything from concept to the final styling.</p>
+                    <h2 class="teaser-title">Regent Hill.</h2>
+                    <p class="teaser-desc">From Luxury Residences in powai. Our turnkey solutions cover everything from concept to the final styling.</p>
                     <button class="btn hover-target" onclick="switchTab('services')">View Services</button>
                 </div>
             </div>
         </div>
-
         <div class="container teaser-section" style="border-bottom: none;">
             <div class="teaser-grid">
                 <div class="teaser-content">
                     <span class="section-subtitle">03 / FEATURED WORK</span>
-                    <h2 class="teaser-title">The Oberoi Sky.</h2>
-                    <p class="teaser-desc">A 4,000 sq.ft penthouse in powai designed with a minimalist "Noir" palette, featuring Italian marble and brass accents.</p>
+                    <h2 class="teaser-title">Hiranandani Highland.</h2>
+                    <p class="teaser-desc">A 3BHK in powai.</p>
                     <button class="btn hover-target" onclick="switchTab('projects')">View Portfolio</button>
                 </div>
                 <div class="img-reveal-wrap hover-target">
-                    <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=800" class="teaser-img" alt="Project Teaser">
+                    <img src="images/living room 1.jpg" class="teaser-img" alt="Project Teaser">
                 </div>
             </div>
         </div>
-
         <div class="shared-footer">
             <div class="container">
                 <h2 class="footer-big-title">Let's create something<br>timeless.</h2>
@@ -613,8 +645,6 @@
                     <h3>The Philosophy</h3>
                     <p>Rivaan Interiors is more than a design firm; it is a curation of lifestyle. Based in the heart of Mumbai, we understand the city's chaotic energy and the deep desire for a sanctuary. Our philosophy, <strong>"Calm Luxury,"</strong> focuses on creating spaces that decompress, inspire, and endure.</p>
                     <p>We move beyond trends. By combining architectural precision with an artistic selection of textures—marble, velvet, brass, and wood—we create environments that feel personal and profoundly sophisticated.</p>
-                    <h3>The Process</h3>
-                    <p>Every project begins with a conversation, not a blueprint. We listen to your routine, your aspirations, and your silence. From the first sketch to the final styling, our turnkey execution ensures that the journey is as seamless as the finish.</p>
                 </div>
                 <div class="about-img-wrap hover-target">
                     <img src="https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?q=80&w=1200" alt="Design Materials">
@@ -631,11 +661,7 @@
                 <h2 class="footer-big-title">Ready to start?</h2>
                 <div class="footer-grid">
                     <div class="f-col"><h5>VISIT US</h5><p>Powai, Mumbai</p></div>
-                    <div class="f-col">
-                        <h5>CONTACT</h5>
-                        <a href="tel:+919821313487" class="phone-link hover-target">+91 98213 13487</a>
-                        <a href="tel:+919833503702" class="phone-link hover-target">+91 9833503702</a>
-                    </div>
+                    <div class="f-col"><h5>CONTACT</h5><a href="tel:+919821313487" class="phone-link hover-target">+91 98213 13487</a></div>
                     <div class="f-col"><h5>SOCIAL</h5><a href="https://www.instagram.com/rivaan.interiors/" target="_blank">Instagram</a></div>
                 </div>
                 <a href="https://wa.me/919821313487" target="_blank" class="btn btn-whatsapp hover-target">Chat on WhatsApp</a>
@@ -667,7 +693,7 @@
                 </div>
                 <div class="service-card hover-target">
                     <div class="service-bg"><img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=800" alt="Commercial"></div>
-                    <div class="service-content"><h3 class="service-title">Commercial Spaces</h3><p class="service-desc">Strategic design for corporate HQs and boutique offices. Spaces that elevate brand identity and productivity.</p></div>
+                    <div class="service-content"><h3 class="service-title">Commercial Spaces</h3><p class="service-desc">Strategic design for corporate HQs and boutique offices.</p></div>
                 </div>
                 <div class="service-card hover-target" onclick="switchTab('calculator')" style="cursor: pointer;">
                     <div class="service-bg"><img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=800" alt="Turnkey"></div>
@@ -690,11 +716,7 @@
                 <h2 class="footer-big-title">Build your vision.</h2>
                 <div class="footer-grid">
                     <div class="f-col"><h5>VISIT US</h5><p>Powai, Mumbai</p></div>
-                    <div class="f-col">
-                        <h5>CONTACT</h5>
-                        <a href="tel:+919821313487" class="phone-link hover-target">+91 98213 13487</a>
-                        <a href="tel:+919833503702" class="phone-link hover-target">+91 9833503702</a>
-                    </div>
+                    <div class="f-col"><h5>CONTACT</h5><a href="tel:+919821313487" class="phone-link hover-target">+91 98213 13487</a></div>
                     <div class="f-col"><h5>SOCIAL</h5><a href="https://www.instagram.com/rivaan.interiors/" target="_blank">Instagram</a></div>
                 </div>
                 <a href="https://wa.me/919821313487" target="_blank" class="btn btn-whatsapp hover-target">Chat on WhatsApp</a>
@@ -737,7 +759,7 @@
                 <div id="price-result" class="price-reveal">
                     <p style="color:#999;">ESTIMATED PROJECT COST</p>
                     <h2 class="estimated-price" id="final-price">₹0</h2>
-                    <p style="color:#666; font-size: 0.9rem;">*This is an approximate valuation based on market standards for premium luxury finishing. Final quote depends on material selection.</p>
+                    <p style="color:#666; font-size: 0.9rem;">*Approximate valuation. Final quote depends on material selection.</p>
                     <br>
                     <a href="https://wa.me/919821313487" target="_blank" class="btn btn-whatsapp hover-target">Get Exact Quote on WhatsApp</a>
                 </div>
@@ -784,66 +806,113 @@
                     <div id="furn-price-result" class="price-reveal">
                         <p style="color:#999;">ESTIMATED ITEM COST</p>
                         <h2 class="estimated-price" id="furn-final-price">₹0</h2>
-                        <p style="color:#666; font-size: 0.9rem;">*Includes GST & Delivery within Mumbai.</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- === TAB 4: PORTFOLIO === -->
+    <!-- === TAB 4: PORTFOLIO GRID === -->
     <section id="projects" class="tab-section">
         <div class="container tab-content-pad">
             <div class="section-header">
                 <span class="section-subtitle">Selected Works</span>
                 <h2 class="section-title">Curated Spaces.</h2>
             </div>
-           
 
 
+            
+            <div class="project-grid">
+                <!-- Project 1 -->
+                <div class="project-item hover-target" style="cursor: pointer;" 
+                     onclick="openProjectPage('Hiranandani Highland', 'Powai, Mumbai', '2-BHK Residential', '2024', 'Nordic Luxury', 'A sanctuary of beige and cream, focused on maximizing natural light. This residence features custom white oak veneers and automated lighting systems designed for serenity. Every corner speaks of bespoke luxury tailored for a modern family.', 'images/living room 1.jpg')">
+                    <img src="images/living room 1.jpg" class="p-img" alt="Hiranandani Highland">
+                    <div class="p-info">
+                        <h3 class="p-title">Hiranandani Highland</h3>
+                        <span class="p-loc">Powai • 2-BHK Residential</span>
+                    </div>
+                </div>
 
+                <!-- Project 2 -->
+                <div class="project-item hover-target" style="cursor: pointer;"
+                     onclick="openProjectPage('Castle Rock', 'Powai, Mumbai', '1-BHK Luxury Suite', '2023', 'Modern Minimalist', 'Compact luxury defined by smart modular furniture and fluted glass partitions to separate living and sleeping areas without blocking light. A testament to how small spaces can feel grand with the right design.', 'images/living room 3.jpg')">
+                    <img src="images/living room 3.jpg" class="p-img" alt="Castle Rock">
+                    <div class="p-info">
+                        <h3 class="p-title">Castle Rock</h3>
+                        <span class="p-loc">Powai • 1-BHK Suite</span>
+                    </div>
+                </div>
 
+                <!-- Project 3 -->
+                <div class="project-item hover-target" style="cursor: pointer;"
+                     onclick="openProjectPage('Regent Hill Estates', 'Kensington SE, Mumbai', '2-BHK Family Home', '2024', 'Contemporary Art Deco', 'A bespoke dining experience featuring Italian marble flooring, handcrafted brass chandeliers, and warm walnut tones for family gatherings. This space was designed to be the heart of the home.', 'images/Dining table 2.jpeg')">
+                    <img src="images/Dining table 2.jpeg" class="p-img" alt="Regent Hill">
+                    <div class="p-info">
+                        <h3 class="p-title">Regent Hill Estates</h3>
+                        <span class="p-loc">Kensington • 2-BHK</span>
+                    </div>
+                </div>
 
+                <!-- Project 4 -->
+                <div class="project-item hover-target" style="cursor: pointer;"
+                     onclick="openProjectPage('The Corporate Loft', 'Regent Hill, Commercial', 'Commercial Office', '2023', 'Industrial Chic', 'Commercial elegance designed for high productivity. Features acoustic wall paneling, ergonomic layouts, and a lounge area for informal meetings. Blending function with style.', 'images/living room 2.jpg')">
+                    <img src="images/living room 2.jpg" class="p-img" alt="Office Lounge">
+                    <div class="p-info">
+                        <h3 class="p-title">The Corporate Loft</h3>
+                        <span class="p-loc">Regent Hill • Commercial</span>
+                    </div>
+                </div>
 
+                <!-- Project 5 -->
+                <div class="project-item hover-target" style="cursor: pointer;"
+                     onclick="openProjectPage('Ventura Heights', 'Bandra West', '2-BHK Penthouse', '2024', 'Avant Garde', 'Minimalist living area utilizing floating cabinetry to create a sense of vastness. The TV unit is a custom matte-finish slate masterpiece that acts as the focal point of the living room.', 'images/tv unit 1.jpeg')">
+                    <img src="images/tv unit 1.jpeg" class="p-img" alt="Ventura">
+                    <div class="p-info">
+                        <h3 class="p-title">Ventura Heights</h3>
+                        <span class="p-loc">Bandra • 2-BHK</span>
+                    </div>
+                </div>
 
+                <!-- Project 6 -->
+                <div class="project-item hover-target" style="cursor: pointer;"
+                     onclick="openProjectPage('Birchwood Apartment', 'Juhu, Mumbai', '3-BHK Sea View', '2023', 'Dark Academia', 'A moody, sophisticated palette of charcoal and walnut for the ultimate evening lounge. Plush velvet upholstery meets dark wood finishes to create a cozy yet expansive atmosphere.', 'images/living room 4.jpeg')">
+                    <img src="images/living room 4.jpeg" class="p-img" alt="Birchwood">
+                    <div class="p-info">
+                        <h3 class="p-title">Birchwood Apartment</h3>
+                        <span class="p-loc">Juhu • 3-BHK</span>
+                    </div>
+                </div>
 
+                <!-- Project 7 (NEW) -->
+                <div class="project-item hover-target" style="cursor: pointer;"
+                     onclick="openProjectPage('Oberoi Sky City', 'Borivali East', '4-BHK Luxury', '2024', 'Scandinavian', 'A light-filled haven high above the city suburbs. Clean lines, neutral tones, and functional beauty define this family home.', 'images/kitchen 2.jpeg')">
+                    <img src="images/kitchen 2.jpeg" class="p-img" alt="Oberoi Sky City">
+                    <div class="p-info">
+                        <h3 class="p-title">Oberoi Sky City</h3>
+                        <span class="p-loc">Borivali • 4-BHK</span>
+                    </div>
+                </div>
 
+                <!-- Project 8 (NEW) -->
+                <div class="project-item hover-target" style="cursor: pointer;"
+                     onclick="openProjectPage('Lodha World One', 'Lower Parel', '3-BHK Residence', '2024', 'Classic Luxury', 'High-end luxury with Italian marble flooring and gold accents tailored for a premium lifestyle in South Mumbai.', 'images/living room 1.jpg')">
+                    <img src="images/living room 1.jpg" class="p-img" alt="Lodha World One">
+                    <div class="p-info">
+                        <h3 class="p-title">Lodha World One</h3>
+                        <span class="p-loc">Lower Parel • 3-BHK</span>
+                    </div>
+                </div>
 
-
- <div class="project-grid">
-                <a href="#" class="project-item hover-target">
-                    <img src="file:///C:/Users/BC/Downloads/pexels-ahmetcotur-31817156.jpg" alt="Luxury Living">
-                    <div class="p-info"><h3 class="p-title">The Oberoi Sky</h3><span class="p-loc">Powai, Mumbai • Residential</span></div>
-                </a>
-                <a href="#" class="project-item hover-target">
-                    <img src="file:///C:/Users/BC/Downloads/IMG_20251230_151427.jpg" class="p-img" alt="Master Bedroom">
-                    <div class="p-info"><h3 class="p-title">Lodha World One</h3><span class="p-loc">powai,mumbai • Residential</span></div>
-                </a>
-                <a href="#" class="project-item hover-target">
-                    <img src="file:///C:/Users/BC/Downloads/IMG-20251202-WA0026.jpg" class="p-img" alt="Dining Area">
-                    <div class="p-info"><h3 class="p-title">Sea Mist Penthouse</h3><span class="p-loc">powai, Mumbai  • Residential</span></div>
-                </a>
-                <a href="#" class="project-item hover-target">
-                    <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?q=80&w=800" class="p-img" alt="Office Lounge">
-                    <div class="p-info"><h3 class="p-title">Fintech HQ</h3><span class="p-loc">powai, Mumbai  • Commercial</span></div>
-                </a>
-                <a href="#" class="project-item hover-target">
-                    <img src="https://images.unsplash.com/photo-1512918760383-5658b512916b?q=80&w=800" class="p-img" alt="Minimal Apartment">
-                    <div class="p-info"><h3 class="p-title">Minimalist Villa</h3><span class="p-loc">powai, Mumbai  • Vacation Home</span></div>
-                </a>
-                <a href="#" class="project-item hover-target">
-                    <img src="https://images.unsplash.com/photo-1600210491892-db9d4aa02555?q=80&w=800" class="p-img" alt="Dark Interior">
-                    <div class="p-info"><h3 class="p-title">Noir Apartment</h3><span class="p-loc">powai, Mumbai  • Residential</span></div>
-                </a>
+                <!-- Project 9 (NEW) -->
+                <div class="project-item hover-target" style="cursor: pointer;"
+                     onclick="openProjectPage('Rustomjee Elements', 'Juhu', 'Sea View Villa', '2023', 'Modern Tropical', 'Combining modern aesthetics with tropical warmth. A perfect blend of indoor luxury and outdoor serenity.', 'images/living room 3.jpg')">
+                    <img src="images/living room 3.jpg" class="p-img" alt="Rustomjee Elements">
+                    <div class="p-info">
+                        <h3 class="p-title">Rustomjee Elements</h3>
+                        <span class="p-loc">Juhu • Villa</span>
+                    </div>
+                </div>
             </div>
-
-
-
-
-
-
-
-
 
         </div>
         <div class="shared-footer">
@@ -851,14 +920,77 @@
                 <h2 class="footer-big-title">Your space next.</h2>
                 <div class="footer-grid">
                     <div class="f-col"><h5>VISIT US</h5><p>Powai, Mumbai 400079</p></div>
-                    <div class="f-col">
-                        <h5>CONTACT</h5>
-                        <a href="tel:+919821313487" class="phone-link hover-target">+91 98213 13487</a>
-                        <a href="tel:+919833503702" class="phone-link hover-target">+91 9833503702</a>
-                    </div>
+                    <div class="f-col"><h5>CONTACT</h5><a href="tel:+919821313487" class="phone-link hover-target">+91 98213 13487</a></div>
                     <div class="f-col"><h5>SOCIAL</h5><a href="https://www.instagram.com/rivaan.interiors/" target="_blank">Instagram</a></div>
                 </div>
                 <a href="https://wa.me/919821313487" target="_blank" class="btn btn-whatsapp hover-target">Chat on WhatsApp</a>
+                <p class="copyright">&copy; 2025 Rivaan Interiors.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- === NEW TAB: PROJECT DETAILS VIEW (Acts as a new page) === -->
+    <section id="project-view" class="tab-section">
+        <div class="container tab-content-pad">
+            <button class="btn hover-target" onclick="switchTab('projects')" style="margin-bottom: 30px; font-size: 0.7rem; padding: 10px 20px;">&larr; Back to Portfolio</button>
+            
+            <div class="pv-header">
+                <span class="section-subtitle" id="pv-sub">Residential</span>
+                <h1 class="hero-title" style="font-size: 4rem;" id="pv-title">Project Name</h1>
+            </div>
+
+            <div class="pv-hero">
+                <img id="pv-hero-img" src="" alt="Project Hero">
+            </div>
+
+            <div class="pv-meta-grid">
+                <div class="pv-meta-item">
+                    <h5>LOCATION</h5>
+                    <p id="pv-loc">Mumbai</p>
+                </div>
+                <div class="pv-meta-item">
+                    <h5>YEAR</h5>
+                    <p id="pv-year">2024</p>
+                </div>
+                <div class="pv-meta-item">
+                    <h5>TYPE</h5>
+                    <p id="pv-type">Residential</p>
+                </div>
+                <div class="pv-meta-item">
+                    <h5>STYLE</h5>
+                    <p id="pv-style">Modern</p>
+                </div>
+            </div>
+
+            <div class="pv-desc-container">
+                <p class="pv-desc-text" id="pv-desc">Description goes here.</p>
+                <br>
+                <a href="https://wa.me/919821313487" target="_blank" class="btn btn-whatsapp hover-target">Inquire About This Project</a>
+            </div>
+
+            <div class="section-header">
+                <span class="section-subtitle">Gallery</span>
+                <h2 class="section-title">More Views.</h2>
+            </div>
+
+            <div class="pv-gallery">
+                <!-- Using the same image twice for demo purposes since we don't have extra unique images -->
+                <div class="pv-gallery-item hover-target">
+                    <img id="pv-gal-1" src="" alt="Detail 1">
+                </div>
+                <div class="pv-gallery-item hover-target">
+                    <img id="pv-gal-2" src="" alt="Detail 2">
+                </div>
+            </div>
+
+        </div>
+        <div class="shared-footer">
+            <div class="container">
+                <h2 class="footer-big-title">Ready to start?</h2>
+                <div class="footer-grid">
+                    <div class="f-col"><h5>VISIT US</h5><p>Powai, Mumbai</p></div>
+                    <div class="f-col"><h5>CONTACT</h5><a href="tel:+919821313487" class="phone-link hover-target">+91 98213 13487</a></div>
+                </div>
                 <p class="copyright">&copy; 2025 Rivaan Interiors.</p>
             </div>
         </div>
@@ -869,20 +1001,9 @@
         <div class="container contact-wrap">
             <h1 class="footer-big-title" style="margin-bottom: 60px;">Let's create something<br>timeless.</h1>
             <div class="footer-grid">
-                <div class="f-col">
-                    <h5>VISIT US</h5>
-                    <p>Powai, Mumbai</p>
-                </div>
-                <div class="f-col">
-                    <h5>CONTACT</h5>
-                    <a href="tel:+919821313487" class="phone-link hover-target">+91 98213 13487</a>
-                    <a href="tel:+919833503702" class="phone-link hover-target">+91 9833503702</a>
-                    <a href="mailto:hello@rivaaninteriors.com" class="hover-target">hello@rivaaninteriors.com</a>
-                </div>
-                <div class="f-col">
-                    <h5>FOLLOW</h5>
-                    <a href="https://www.instagram.com/rivaan.interiors/" target="_blank" class="hover-target">Instagram</a>
-                </div>
+                <div class="f-col"><h5>VISIT US</h5><p>Powai, Mumbai</p></div>
+                <div class="f-col"><h5>CONTACT</h5><a href="tel:+919821313487" class="phone-link hover-target">+91 98213 13487</a><a href="mailto:hello@rivaaninteriors.com" class="hover-target">hello@rivaaninteriors.com</a></div>
+                <div class="f-col"><h5>FOLLOW</h5><a href="https://www.instagram.com/rivaan.interiors/" target="_blank" class="hover-target">Instagram</a></div>
             </div>
             <a href="https://wa.me/919821313487" target="_blank" class="btn btn-whatsapp hover-target">Chat on WhatsApp</a>
             <p class="copyright">&copy; 2025 Rivaan Interiors.</p>
@@ -929,11 +1050,34 @@
 
 </main>
 
-<!-- LOGIC -->
 <script>
-    gsap.registerPlugin(ScrollTrigger);
+    /* --- NEW FUNCTION TO OPEN PROJECT PAGE --- */
+    function openProjectPage(title, loc, type, year, style, desc, imgSrc) {
+        // Populate the Project View Section
+        document.getElementById('pv-title').innerText = title;
+        document.getElementById('pv-sub').innerText = type;
+        document.getElementById('pv-loc').innerText = loc;
+        document.getElementById('pv-year').innerText = year;
+        document.getElementById('pv-type').innerText = type;
+        document.getElementById('pv-style').innerText = style;
+        document.getElementById('pv-desc').innerText = desc;
+        
+        // Main Image
+        document.getElementById('pv-hero-img').src = imgSrc;
+        
+        // Gallery Images (Reusing main image for demo, in real scenario pass array)
+        document.getElementById('pv-gal-1').src = imgSrc;
+        document.getElementById('pv-gal-2').src = imgSrc;
 
-    /* --- FLUID BACKGROUND LOGIC --- */
+        // Switch to the Project View Tab (Acts like a new page)
+        switchTab('project-view');
+        
+        // Scroll to top of new section
+        document.getElementById('project-view').scrollTop = 0;
+    }
+
+    /* --- INIT & FLUID BACKGROUND --- */
+    gsap.registerPlugin(ScrollTrigger);
     const canvas = document.getElementById('canvas1');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
@@ -953,7 +1097,6 @@
         update(){ this.x += this.speedX; this.y += this.speedY; if (this.size > 0.2) this.size -= 0.1; }
         draw(){ ctx.fillStyle = this.color; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.shadowColor = '#ff0000'; ctx.shadowBlur = 25; ctx.fill(); ctx.shadowBlur = 0; }
     }
-
     function handleParticles(){
         for (let i = 0; i < particlesArray.length; i++){
             particlesArray[i].update(); particlesArray[i].draw();
@@ -961,14 +1104,16 @@
         }
     }
     function animateCanvas(){
-        ctx.fillStyle = 'rgba(43, 0, 0, 0.2)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // UPDATED: Fill with the new Background Color #800703 (rgb(179, 11, 5)) with 0.2 opacity for trail effect
+        ctx.fillStyle = 'rgba(179, 11, 5, 0.2)'; 
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
         handleParticles(); requestAnimationFrame(animateCanvas);
     }
     animateCanvas();
 
     /* --- IMAGE ANIMATIONS --- */
     function initImageAnimations() {
-        const targets = gsap.utils.toArray('.teaser-img, .about-img-wrap img, .p-img, .service-bg img, .furn-visual img');
+        const targets = gsap.utils.toArray('.teaser-img, .about-img-wrap img, .p-img, .service-bg img, .furn-visual img, .pv-hero img');
         targets.forEach(img => {
             gsap.to(img, {
                 scale: 1, filter: "grayscale(0%) brightness(1)", duration: 1.5, ease: "power2.out",
@@ -1083,28 +1228,19 @@
         document.getElementById('furn-final-price').innerText = formatter.format(finalPrice); gsap.to('#furn-price-result', { display: 'block', opacity: 1, duration: 1 });
     }
 
+    /* --- UTILS & PRELOADER --- */
     function closeIntro() { const intro = document.getElementById('intro-modal'); gsap.to(intro, { opacity: 0, duration: 0.8, onComplete: () => intro.style.display = 'none' }); }
-
-    /* --- UTILS --- */
     const cursorDot = document.querySelector('.cursor-dot'); const cursorOutline = document.querySelector('.cursor-outline');
     if (window.matchMedia("(pointer: fine)").matches) {
         gsap.set(cursorDot, {xPercent: -50, yPercent: -50}); gsap.set(cursorOutline, {xPercent: -50, yPercent: -50});
         window.addEventListener('mousemove', (e) => { gsap.to(cursorDot, { duration: 0.1, x: e.clientX, y: e.clientY }); gsap.to(cursorOutline, { duration: 0.5, x: e.clientX, y: e.clientY, ease: "power2.out" }); });
         document.body.addEventListener('mouseover', (e) => { if (e.target.closest('.hover-target')) { document.body.classList.add('hovering'); } else { document.body.classList.remove('hovering'); } });
     }
-
-    const tl = gsap.timeline();
-    gsap.set("body", { visibility: "visible" });
-
-    /* --- UPDATED PRELOADER ANIMATION --- */
+    const tl = gsap.timeline(); gsap.set("body", { visibility: "visible" });
     tl.to(".loader-line", { width: "100%", duration: 1.2, ease: "power2.inOut" })
       .to(".loader-text", { y: -50, opacity: 0, duration: 0.5 })
       .to(".preloader", { yPercent: -100, duration: 1, ease: "expo.inOut" })
       .to("body", { opacity: 1, duration: 0.1 }, "-=1")
-      
-      /* NEW TAGLINE ANIMATION */
-      .to(".hero-tagline", { y: 0, opacity: 1, duration: 0.8, ease: "power2.out" }, "-=0.5")
-      
       .from(".hero-title span", { yPercent: 100, opacity: 0, duration: 1, stagger: 0.2, ease: "power3.out" }, "-=0.6")
       .to(".hero-sub", { y: 0, opacity: 1, duration: 1 }, "-=0.5")
       .call(() => { ScrollTrigger.refresh(); initImageAnimations(); });
@@ -1125,24 +1261,11 @@
         });
     }
 
-    document.addEventListener('keydown', (e) => {
-        const activeTab = document.querySelector('.tab-section.active-tab'); if (!activeTab) return;
-        const scrollAmount = 100; if (e.key === 'ArrowDown') activeTab.scrollBy({ top: scrollAmount, behavior: 'smooth' });
-        else if (e.key === 'ArrowUp') activeTab.scrollBy({ top: -scrollAmount, behavior: 'smooth' });
-    });
-
     const mobileMenu = document.getElementById('mobileMenu');
     function toggleMobileMenu() { mobileMenu.classList.toggle('open'); }
     function mobileLinkClick(tabId) { toggleMobileMenu(); switchTab(tabId); }
-    
-    const styleSheet = document.createElement("style");
-    styleSheet.innerText = ` @keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 40% {transform: translateY(-10px);} 60% {transform: translateY(-5px);} } `;
-    document.head.appendChild(styleSheet);
-    
-    gsap.utils.toArray('.teaser-section').forEach(section => {
-        gsap.from(section, { scrollTrigger: { trigger: section, scroller: "#home", start: "top 80%", toggleActions: "play none none reverse" }, y: 50, opacity: 0, duration: 0.8 });
-    });
 
+    /* --- GESTURE CONTROL --- */
     if (window.innerWidth > 768) { 
         const videoElement = document.getElementById('input_video'); const gestureText = document.getElementById('gesture-text'); const introModal = document.getElementById('intro-modal');
         const hands = new Hands({locateFile: (file) => "https://cdn.jsdelivr.net/npm/@mediapipe/hands/" + file });
@@ -1162,5 +1285,6 @@
         const camera = new Camera(videoElement, { onFrame: async () => { await hands.send({image: videoElement}); }, width: 320, height: 240 }); camera.start();
     }
 </script>
+
 </body>
 </html>
